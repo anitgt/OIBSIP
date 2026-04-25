@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
+  const [pizzas, setPizzas] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,6 +15,18 @@ const Dashboard = () => {
       navigate('/login');
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const fetchPizzas = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/pizzas');
+        setPizzas(response.data);
+      } catch (error) {
+        console.error('Failed to fetch pizzas:', error);
+      }
+    };
+    fetchPizzas();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -26,31 +40,36 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <nav className="dashboard-nav">
         <h1>Pizzeria</h1>
-        <button className="btn-logout" onClick={handleLogout}>Logout</button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <span style={{ color: 'white' }}>Welcome, {user.name}!</span>
+          <button className="btn-logout" onClick={handleLogout}>Logout</button>
+        </div>
       </nav>
       
-      <div className="glass-panel" style={{ maxWidth: '100%' }}>
-        <h2>Welcome, {user.name}!</h2>
-        <p style={{ marginTop: '1rem', color: '#aaa' }}>
-          Role: <strong style={{ color: 'white' }}>{user.role}</strong>
-        </p>
-        <p style={{ marginTop: '0.5rem', color: '#aaa' }}>
-          Email: <strong style={{ color: 'white' }}>{user.email}</strong>
-        </p>
+      <div className="glass-panel" style={{ maxWidth: '100%', padding: '2rem' }}>
+        <h2 style={{ textAlign: 'left', marginBottom: '0.5rem' }}>Our Menu</h2>
+        <p style={{ color: '#aaa', marginBottom: '1rem' }}>Freshly baked pizzas for you.</p>
         
-        {user.role === 'admin' ? (
-          <div style={{ marginTop: '2rem', padding: '1rem', background: 'rgba(255, 107, 107, 0.1)', borderRadius: '8px' }}>
-            <h3>Admin Controls</h3>
-            <p style={{ marginTop: '0.5rem' }}>You have access to the admin dashboard.</p>
-            {/* Admin specific features like managing orders, users, etc. would go here */}
-          </div>
-        ) : (
-          <div style={{ marginTop: '2rem', padding: '1rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '8px' }}>
-            <h3>User Area</h3>
-            <p style={{ marginTop: '0.5rem' }}>You can view the menu and place orders here.</p>
-            {/* User specific features like ordering pizza would go here */}
-          </div>
-        )}
+        <div className="pizza-grid">
+          {pizzas.map((pizza) => (
+            <div key={pizza._id} className="pizza-card">
+              <img src={pizza.image} alt={pizza.name} className="pizza-image" />
+              <div className="pizza-info">
+                <div className="pizza-header">
+                  <h3 className="pizza-name">{pizza.name}</h3>
+                  <span className={`pizza-category ${pizza.category === 'Veg' ? 'cat-veg' : 'cat-non-veg'}`}>
+                    {pizza.category}
+                  </span>
+                </div>
+                <p className="pizza-desc">{pizza.description}</p>
+                <div className="pizza-footer">
+                  <span className="pizza-price">${pizza.price.toFixed(2)}</span>
+                  <button className="btn-order">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
