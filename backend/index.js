@@ -15,6 +15,10 @@ app.get('/', (req, res) => {
   res.send('MERN Backend API is running!');
 });
 
+// Routes
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/mern_project', {
   useNewUrlParser: true,
