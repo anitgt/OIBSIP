@@ -19,7 +19,12 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchPizzas = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/pizzas');
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:5000/api/pizzas', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         setPizzas(response.data);
       } catch (error) {
         console.error('Failed to fetch pizzas:', error);
