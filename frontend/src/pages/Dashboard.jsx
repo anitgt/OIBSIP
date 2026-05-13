@@ -52,8 +52,19 @@ const Dashboard = () => {
       </nav>
       
       <div className="glass-panel" style={{ maxWidth: '100%', padding: '2rem' }}>
-        <h2 style={{ textAlign: 'left', marginBottom: '0.5rem' }}>Our Menu</h2>
-        <p style={{ color: '#aaa', marginBottom: '1rem' }}>Freshly baked pizzas for you.</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <div>
+            <h2 style={{ textAlign: 'left', marginBottom: '0.5rem' }}>Our Menu</h2>
+            <p style={{ color: '#aaa' }}>Freshly baked pizzas for you.</p>
+          </div>
+          <button 
+            className="btn-primary" 
+            style={{ width: 'auto', padding: '0.8rem 1.5rem' }}
+            onClick={() => navigate('/custom-pizza')}
+          >
+            Create Custom Pizza
+          </button>
+        </div>
         
         <div className="pizza-grid">
           {pizzas.map((pizza) => (

@@ -6,6 +6,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
+import CustomPizza from './pages/CustomPizza';
 import './index.css';
 
 const ProtectedRoute = ({ children }) => {
@@ -30,6 +31,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/custom-pizza" 
+            element={
+              <ProtectedRoute>
+                <CustomPizza />
               </ProtectedRoute>
             } 
           />
