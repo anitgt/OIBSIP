@@ -18,8 +18,10 @@ app.get('/', (req, res) => {
 // Routes
 const authRoutes = require('./routes/authRoutes');
 const pizzaRoutes = require('./routes/pizzaRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 app.use('/api/auth', authRoutes);
 app.use('/api/pizzas', pizzaRoutes);
+app.use('/api/orders', orderRoutes);
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/mern_project')

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const bases = ['Thin Crust', 'Hand Tossed', 'Cheese Burst', 'Pan Pizza', 'Cauliflower Crust'];
@@ -14,7 +14,17 @@ const CustomPizza = () => {
     cheese: '',
     veggies: []
   });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Load Razorpay script on mount
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => document.body.removeChild(script);
+  }, []);
 
   const handleSelect = (category, value) => {
     setSelection({ ...selection, [category]: value });
@@ -35,9 +45,77 @@ const CustomPizza = () => {
     if (step > 1) setStep(step - 1);
   };
 
-  const handleAddToCart = () => {
-    alert('Custom pizza added to cart!\n' + JSON.stringify(selection, null, 2));
-    navigate('/dashboard');
+  const handlePayNow = async () => {
+    if (!window.Razorpay) {
+      alert('Payment gateway not loaded. Please refresh and try again.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+      // 1. Create order on backend → saved to MongoDB
+      const res = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ selection, amount: 49900 }), // ₹499.00 in paise
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Order creation failed');
+
+      // 2. Open Razorpay checkout
+      const options = {
+        key: data.keyId,
+        amount: data.amount,
+        currency: 'INR',
+        name: 'Pizzeria 🍕',
+        description: `Custom Pizza – ${selection.base} base`,
+        order_id: data.orderId,
+        handler: async function (response) {
+          // 3. Verify payment on backend → updates MongoDB order status to 'paid'
+          const verifyRes = await fetch('http://localhost:5000/api/orders/verify', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(response),
+          });
+          const verifyData = await verifyRes.json();
+          if (verifyRes.ok) {
+            alert('🎉 Order placed successfully! Your custom pizza is being prepared.');
+            navigate('/dashboard');
+          } else {
+            alert('Payment verification failed: ' + verifyData.message);
+          }
+        },
+        prefill: {
+          name: user.name || 'Pizza Lover',
+          email: user.email || 'test@example.com',
+          contact: '9999999999',
+        },
+        theme: { color: '#ff6b6b' },
+        modal: {
+          ondismiss: () => setLoading(false),
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', function (response) {
+        alert('Payment failed: ' + response.error.description);
+        setLoading(false);
+      });
+      rzp.open();
+    } catch (err) {
+      console.error(err);
+      alert('Error: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderStepContent = () => {
@@ -194,10 +272,11 @@ const CustomPizza = () => {
           ) : (
             <button 
               className="btn-primary" 
-              style={{ width: 'auto', padding: '0.8rem 2rem', background: '#4CAF50' }} 
-              onClick={handleAddToCart}
+              style={{ width: 'auto', padding: '0.8rem 2rem', background: loading ? '#888' : '#ff6b6b' }} 
+              onClick={handlePayNow}
+              disabled={loading}
             >
-              Add to Cart
+              {loading ? 'Processing...' : '💳 Pay & Place Order (₹499)'}
             </button>
           )}
         </div>
