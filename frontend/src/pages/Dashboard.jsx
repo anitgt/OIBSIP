@@ -46,7 +46,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <nav className="dashboard-nav">
-        <h1>Pizzeria</h1>
+        <h1 className="clickable-logo" onClick={() => navigate('/dashboard')}>Pizzeria</h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <span style={{ color: 'white' }}>Welcome, {user.name}!</span>
           <button className="btn-logout" onClick={handleLogout}>Logout</button>

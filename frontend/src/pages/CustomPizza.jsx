@@ -161,7 +161,7 @@ const CustomPizza = () => {
   return (
     <div className="dashboard-container">
       <nav className="dashboard-nav">
-        <h1>Pizzeria Builder</h1>
+        <h1 className="clickable-logo" onClick={() => navigate('/dashboard')}>Pizzeria Builder</h1>
         <button className="btn-logout" onClick={() => navigate('/dashboard')}>Back to Menu</button>
       </nav>
 

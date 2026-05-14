@@ -115,10 +115,10 @@ const Cart = () => {
 
   return (
     <div className="dashboard-container">
-      <nav className="dashboard-nav">
-        <h1>Pizzeria 🍕</h1>
-        <button className="btn-logout" onClick={() => navigate('/dashboard')}>Back to Menu</button>
-      </nav>
+        <nav className="dashboard-nav">
+          <h1 className="clickable-logo" onClick={() => navigate('/dashboard')}>Pizzeria 🍕</h1>
+          <button className="btn-logout" onClick={() => navigate('/dashboard')}>Back to Menu</button>
+        </nav>
 
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         <h2 className="cart-page-title">🛒 Your Cart</h2>
