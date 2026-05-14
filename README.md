@@ -2,6 +2,9 @@
 
 A full-stack MERN (MongoDB, Express, React, Node.js) application transformed into a premium pizza e-commerce experience with integrated Razorpay payments and an advanced Admin Inventory Management system.
 
+## 🔗 Live Demo
+**Website:** [https://pizzeria-webapp.vercel.app/](https://pizzeria-webapp.vercel.app/)
+
 ## 🎯 Objective
 The primary goal was to evolve a basic Pizzeria website into a functional, production-ready platform where users can customize pizzas, pay securely, and track their orders, while admins can manage ingredients and monitor the entire business lifecycle.
 
