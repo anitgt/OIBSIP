@@ -32,6 +32,10 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/mern_projec
 .catch((err) => console.log('MongoDB connection error:', err));
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+module.exports = app;

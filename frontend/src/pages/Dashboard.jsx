@@ -22,7 +22,7 @@ const Dashboard = () => {
     const fetchPizzas = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/pizzas', {
+        const response = await axios.get('/api/pizzas', {
           headers: {
             Authorization: `Bearer ${token}`
           }

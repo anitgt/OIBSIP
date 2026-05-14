@@ -12,7 +12,7 @@ const AdminInventory = () => {
   const fetchInventory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/inventory', {
+      const response = await axios.get('/api/inventory', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setInventory(response.data);
@@ -31,7 +31,7 @@ const AdminInventory = () => {
     setUpdatingId(id);
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/inventory/${id}`, 
+      await axios.put(`/api/inventory/${id}`, 
         { stock: parseInt(newStock) },
         { headers: { Authorization: `Bearer ${token}` } }
       );

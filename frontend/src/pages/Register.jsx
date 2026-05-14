@@ -18,7 +18,7 @@ const Register = () => {
     setError('');
     setMessage('');
     try {
-      await axios.post('http://localhost:5000/api/auth/register', formData);
+      await axios.post('/api/auth/register', formData);
       setShowOtp(true);
       // Automatically "verify" after 1.5 seconds
       setIsVerifying(true);

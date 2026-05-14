@@ -35,7 +35,7 @@ const Cart = () => {
         selection: item.selection || null
       }));
 
-      const res = await fetch('http://localhost:5000/api/orders', {
+      const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ items: itemsToOrder, amount: amountInPaise }),
@@ -51,7 +51,7 @@ const Cart = () => {
         description: `Order of ${cartItems.length} item(s)`,
         order_id: data.orderId,
         handler: async (response) => {
-          const verifyRes = await fetch('http://localhost:5000/api/orders/verify', {
+          const verifyRes = await fetch('/api/orders/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
             body: JSON.stringify(response),
