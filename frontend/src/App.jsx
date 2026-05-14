@@ -8,6 +8,7 @@ import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import CustomPizza from './pages/CustomPizza';
 import Cart from './pages/Cart';
+import AdminInventory from './pages/AdminInventory';
 import { CartProvider } from './context/CartContext';
 import './index.css';
 
@@ -40,6 +41,10 @@ function App() {
             <Route
               path="/cart"
               element={<ProtectedRoute><Cart /></ProtectedRoute>}
+            />
+            <Route
+              path="/admin/inventory"
+              element={<ProtectedRoute><AdminInventory /></ProtectedRoute>}
             />
           </Routes>
         </div>

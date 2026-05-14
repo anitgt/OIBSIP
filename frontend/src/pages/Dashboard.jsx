@@ -67,6 +67,15 @@ const Dashboard = () => {
             >
               Create Custom Pizza
             </button>
+            {user.role === 'admin' && (
+              <button 
+                className="btn-secondary" 
+                style={{ width: 'auto', padding: '0.8rem 1.5rem', marginRight: '10px', backgroundColor: '#4ecdc4', color: '#000', fontWeight: 'bold' }}
+                onClick={() => navigate('/admin/inventory')}
+              >
+                📊 Manage Inventory
+              </button>
+            )}
             <button 
               className="btn-secondary" 
               style={{ width: 'auto', padding: '0.8rem 1.5rem', backgroundColor: '#333', color: 'white', border: '1px solid #444' }}
