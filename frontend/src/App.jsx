@@ -7,6 +7,8 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import CustomPizza from './pages/CustomPizza';
+import Cart from './pages/Cart';
+import { CartProvider } from './context/CartContext';
 import './index.css';
 
 const ProtectedRoute = ({ children }) => {
@@ -17,35 +19,34 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
-    <Router>
-      <div className="app-container">
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/verify-email/:token" element={<VerifyEmail />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/custom-pizza" 
-            element={
-              <ProtectedRoute>
-                <CustomPizza />
-              </ProtectedRoute>
-            } 
-          />
-        </Routes>
-      </div>
-    </Router>
+    <CartProvider>
+      <Router>
+        <div className="app-container">
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/verify-email/:token" element={<VerifyEmail />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route
+              path="/dashboard"
+              element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
+            />
+            <Route
+              path="/custom-pizza"
+              element={<ProtectedRoute><CustomPizza /></ProtectedRoute>}
+            />
+            <Route
+              path="/cart"
+              element={<ProtectedRoute><Cart /></ProtectedRoute>}
+            />
+          </Routes>
+        </div>
+      </Router>
+    </CartProvider>
   );
 }
 
 export default App;
+

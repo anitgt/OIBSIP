@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useCart } from '../context/CartContext';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [pizzas, setPizzas] = useState([]);
   const navigate = useNavigate();
+  const { addToCart, cartItems } = useCart();
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -57,13 +59,22 @@ const Dashboard = () => {
             <h2 style={{ textAlign: 'left', marginBottom: '0.5rem' }}>Our Menu</h2>
             <p style={{ color: '#aaa' }}>Freshly baked pizzas for you.</p>
           </div>
-          <button 
-            className="btn-primary" 
-            style={{ width: 'auto', padding: '0.8rem 1.5rem' }}
-            onClick={() => navigate('/custom-pizza')}
-          >
-            Create Custom Pizza
-          </button>
+          <div>
+            <button 
+              className="btn-primary" 
+              style={{ width: 'auto', padding: '0.8rem 1.5rem', marginRight: '10px' }}
+              onClick={() => navigate('/custom-pizza')}
+            >
+              Create Custom Pizza
+            </button>
+            <button 
+              className="btn-secondary" 
+              style={{ width: 'auto', padding: '0.8rem 1.5rem', backgroundColor: '#333', color: 'white', border: '1px solid #444' }}
+              onClick={() => navigate('/cart')}
+            >
+              🛒 Cart ({cartItems.length})
+            </button>
+          </div>
         </div>
         
         <div className="pizza-grid">
@@ -79,8 +90,8 @@ const Dashboard = () => {
                 </div>
                 <p className="pizza-desc">{pizza.description}</p>
                 <div className="pizza-footer">
-                  <span className="pizza-price">${pizza.price.toFixed(2)}</span>
-                  <button className="btn-order">Add to Cart</button>
+                  <span className="pizza-price">₹{pizza.price.toFixed(2)}</span>
+                  <button className="btn-order" onClick={() => addToCart({ type: 'regular', name: pizza.name, price: pizza.price, image: pizza.image, pizzaId: pizza._id })}>Add to Cart</button>
                 </div>
               </div>
             </div>

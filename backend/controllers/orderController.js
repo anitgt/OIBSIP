@@ -9,8 +9,8 @@ const razorpay = new Razorpay({
 
 exports.createOrder = async (req, res) => {
   try {
-    const { selection, amount } = req.body;
-    const userId = req.user.id; // Assuming authMiddleware attaches user to req
+    const { items, amount } = req.body;
+    const userId = req.user.id; 
 
     const options = {
       amount: amount, // amount in paise
@@ -22,7 +22,7 @@ exports.createOrder = async (req, res) => {
 
     const newOrder = new Order({
       userId,
-      selection,
+      items,
       amount,
       razorpayOrderId: razorpayOrder.id,
       status: 'created',

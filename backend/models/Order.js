@@ -1,13 +1,18 @@
 const mongoose = require('mongoose');
 
 const OrderSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  pizzaDetails: {
-    base: String,
-    sauce: String,
-    cheese: String,
-    veggies: [String]
-  },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  items: [{
+    name: String,
+    type: { type: String }, // 'regular' or 'custom'
+    price: Number,
+    selection: {
+      base: String,
+      sauce: String,
+      cheese: String,
+      veggies: [String]
+    }
+  }],
   amount: { type: Number, required: true }, // amount in paise
   razorpayOrderId: { type: String, required: true },
   razorpayPaymentId: { type: String },
