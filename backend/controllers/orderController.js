@@ -1,6 +1,7 @@
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const Order = require('../models/Order');
+const Inventory = require('../models/Inventory');
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -58,6 +59,29 @@ exports.verifyPayment = async (req, res) => {
         order.razorpaySignature = razorpay_signature;
         order.status = 'paid';
         await order.save();
+
+        // Update Inventory Stock based on items
+        try {
+          for (const item of order.items) {
+            if (item.type === 'custom' && item.selection) {
+              const { base, sauce, cheese, veggies } = item.selection;
+              if (base) await Inventory.findOneAndUpdate({ name: base }, { $inc: { stock: -1 } });
+              if (sauce) await Inventory.findOneAndUpdate({ name: sauce }, { $inc: { stock: -1 } });
+              if (cheese) await Inventory.findOneAndUpdate({ name: cheese }, { $inc: { stock: -1 } });
+              if (veggies && veggies.length > 0) {
+                await Inventory.updateMany({ name: { $in: veggies } }, { $inc: { stock: -1 } });
+              }
+            } else {
+              // Standard consumption for regular pizzas
+              await Inventory.findOneAndUpdate({ name: 'Thin Crust' }, { $inc: { stock: -1 } });
+              await Inventory.findOneAndUpdate({ name: 'Classic Tomato' }, { $inc: { stock: -1 } });
+              await Inventory.findOneAndUpdate({ name: 'Mozzarella' }, { $inc: { stock: -1 } });
+            }
+          }
+        } catch (invError) {
+          console.error('Inventory update failed:', invError);
+        }
+
         return res.status(200).json({ message: 'Payment verified successfully' });
       }
     }
