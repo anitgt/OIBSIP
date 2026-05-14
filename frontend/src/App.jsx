@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import CustomPizza from './pages/CustomPizza';
 import Cart from './pages/Cart';
 import AdminInventory from './pages/AdminInventory';
+import AdminOrders from './pages/AdminOrders';
 import { CartProvider } from './context/CartContext';
 import './index.css';
 
@@ -45,6 +46,10 @@ function App() {
             <Route
               path="/admin/inventory"
               element={<ProtectedRoute><AdminInventory /></ProtectedRoute>}
+            />
+            <Route
+              path="/admin/orders"
+              element={<ProtectedRoute><AdminOrders /></ProtectedRoute>}
             />
           </Routes>
         </div>

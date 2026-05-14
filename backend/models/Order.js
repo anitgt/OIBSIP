@@ -17,7 +17,11 @@ const OrderSchema = new mongoose.Schema({
   razorpayOrderId: { type: String, required: true },
   razorpayPaymentId: { type: String },
   razorpaySignature: { type: String },
-  status: { type: String, enum: ['created', 'paid', 'failed'], default: 'created' },
+  status: { 
+    type: String, 
+    enum: ['created', 'paid', 'failed', 'order received', 'in the kitchen', 'sent to delivery', 'delivered'], 
+    default: 'created' 
+  },
   createdAt: { type: Date, default: Date.now }
 });
 

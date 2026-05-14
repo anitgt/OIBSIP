@@ -121,3 +121,25 @@ const checkStockAndNotify = async () => {
     console.error('Error in checkStockAndNotify:', err);
   }
 };
+
+exports.getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ status: { $ne: 'created' } }) // Show only attempted/paid orders
+      .sort({ createdAt: -1 })
+      .populate('userId', 'name email');
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching orders' });
+  }
+};
+
+exports.updateOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating order status' });
+  }
+};
