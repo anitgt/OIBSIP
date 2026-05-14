@@ -132,7 +132,7 @@ const Cart = () => {
               <button className="btn-primary" style={{ width: 'auto', padding: '0.8rem 2rem' }} onClick={() => navigate('/dashboard')}>
                 View Menu
               </button>
-              <button className="btn-secondary" style={{ width: 'auto', padding: '0.8rem 2rem' }} onClick={() => navigate('/custom-pizza')}>
+              <button className="btn-primary" onClick={() => navigate('/custom-pizza')}>
                 + Create Custom Pizza
               </button>
             </div>
