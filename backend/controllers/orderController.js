@@ -2,6 +2,7 @@ const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const Order = require('../models/Order');
 const Inventory = require('../models/Inventory');
+const sendEmail = require('../utils/sendEmail');
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -78,6 +79,9 @@ exports.verifyPayment = async (req, res) => {
               await Inventory.findOneAndUpdate({ name: 'Mozzarella' }, { $inc: { stock: -1 } });
             }
           }
+          
+          // Check stock and notify admin if below threshold
+          await checkStockAndNotify();
         } catch (invError) {
           console.error('Inventory update failed:', invError);
         }
@@ -90,5 +94,30 @@ exports.verifyPayment = async (req, res) => {
   } catch (error) {
     console.error('Error verifying payment:', error);
     res.status(500).json({ message: 'Error verifying payment' });
+  }
+};
+
+const checkStockAndNotify = async () => {
+  try {
+    const lowStockItems = await Inventory.find({ stock: { $lt: 20 } });
+    if (lowStockItems.length > 0) {
+      const itemList = lowStockItems.map(item => `<li>${item.name}: <b>${item.stock}</b> remaining</li>`).join('');
+      await sendEmail({
+        to: process.env.EMAIL_USER,
+        subject: '⚠️ Pizzeria Low Stock Alert',
+        html: `
+          <div style="font-family: sans-serif; padding: 20px; color: #333;">
+            <h2 style="color: #ff6b6b;">Inventory Alert</h2>
+            <p>The following ingredients are running low (below threshold of 20):</p>
+            <ul style="background: #f8f9fa; padding: 20px; border-radius: 10px; list-style: none;">
+              ${itemList}
+            </ul>
+            <p>Please log in to the <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/admin/inventory">Admin Dashboard</a> to update the stock.</p>
+          </div>
+        `
+      });
+    }
+  } catch (err) {
+    console.error('Error in checkStockAndNotify:', err);
   }
 };
