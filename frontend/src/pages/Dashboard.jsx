@@ -48,8 +48,10 @@ const Dashboard = () => {
       <nav className="dashboard-nav">
         <h1 className="clickable-logo" onClick={() => navigate('/dashboard')}>Pizzeria</h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <span style={{ color: 'white' }}>Welcome, {user.name}!</span>
-          <button className="btn-logout" onClick={handleLogout}>Logout</button>
+          <button className="btn-secondary" style={{ padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.05)', fontSize: '0.9rem' }} onClick={() => navigate('/my-orders')}>📋 My Orders</button>
+          <button className="btn-secondary" style={{ padding: '0.5rem 1.2rem', background: 'var(--primary-color)', color: 'white', border: 'none', fontSize: '0.9rem' }} onClick={() => navigate('/cart')}>🛒 Cart ({cartItems.length})</button>
+          <span style={{ color: 'white', marginLeft: '1rem', borderLeft: '1px solid var(--glass-border)', paddingLeft: '1rem' }}>{user.name}</span>
+          <button className="btn-logout" style={{ padding: '0.5rem 1rem' }} onClick={handleLogout}>Logout</button>
         </div>
       </nav>
       
@@ -68,37 +70,23 @@ const Dashboard = () => {
               Create Custom Pizza
             </button>
             {user.role === 'admin' && (
-              <>
+              <div style={{ display: 'flex', gap: '10px' }}>
                 <button 
                   className="btn-secondary" 
-                  style={{ width: 'auto', padding: '0.8rem 1.5rem', marginRight: '10px', backgroundColor: '#4ecdc4', color: '#000', fontWeight: 'bold' }}
+                  style={{ width: 'auto', padding: '0.8rem 1.5rem', backgroundColor: '#4ecdc4', color: '#000', fontWeight: 'bold' }}
                   onClick={() => navigate('/admin/inventory')}
                 >
-                  📊 Manage Inventory
+                  📊 Inventory
                 </button>
                 <button 
                   className="btn-secondary" 
-                  style={{ width: 'auto', padding: '0.8rem 1.5rem', marginRight: '10px', backgroundColor: '#ff9f43', color: '#000', fontWeight: 'bold' }}
+                  style={{ width: 'auto', padding: '0.8rem 1.5rem', backgroundColor: '#ff9f43', color: '#000', fontWeight: 'bold' }}
                   onClick={() => navigate('/admin/orders')}
                 >
-                  🍕 Manage Orders
+                  🍕 Orders
                 </button>
-              </>
+              </div>
             )}
-            <button 
-              className="btn-secondary" 
-              style={{ width: 'auto', padding: '0.8rem 1.5rem', marginRight: '10px', backgroundColor: '#3498db', color: 'white', border: '1px solid #2980b9' }}
-              onClick={() => navigate('/my-orders')}
-            >
-              📋 My Orders
-            </button>
-            <button 
-              className="btn-secondary" 
-              style={{ width: 'auto', padding: '0.8rem 1.5rem', backgroundColor: '#333', color: 'white', border: '1px solid #444' }}
-              onClick={() => navigate('/cart')}
-            >
-              🛒 Cart ({cartItems.length})
-            </button>
           </div>
         </div>
         
