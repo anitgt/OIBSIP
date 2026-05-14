@@ -87,6 +87,13 @@ const Dashboard = () => {
             )}
             <button 
               className="btn-secondary" 
+              style={{ width: 'auto', padding: '0.8rem 1.5rem', marginRight: '10px', backgroundColor: '#3498db', color: 'white', border: '1px solid #2980b9' }}
+              onClick={() => navigate('/my-orders')}
+            >
+              📋 My Orders
+            </button>
+            <button 
+              className="btn-secondary" 
               style={{ width: 'auto', padding: '0.8rem 1.5rem', backgroundColor: '#333', color: 'white', border: '1px solid #444' }}
               onClick={() => navigate('/cart')}
             >

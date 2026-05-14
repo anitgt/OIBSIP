@@ -143,3 +143,14 @@ exports.updateOrderStatus = async (req, res) => {
     res.status(500).json({ message: 'Error updating order status' });
   }
 };
+
+exports.getUserOrders = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const orders = await Order.find({ userId, status: { $ne: 'created' } })
+      .sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching orders' });
+  }
+};
