@@ -16,32 +16,18 @@ exports.register = async (req, res) => {
     if (existingUser) return res.status(400).json({ message: 'User already exists' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const verificationToken = crypto.randomBytes(32).toString('hex');
 
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
       role: role || 'user',
-      verificationToken
+      isVerified: true // Automatically verify
     });
 
     await newUser.save();
 
-    const verifyUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-email/${verificationToken}`;
-    const emailHtml = `
-      <h2>Welcome to Pizzeria!</h2>
-      <p>Please verify your email by clicking the link below:</p>
-      <a href="${verifyUrl}" target="_blank">Verify Email</a>
-    `;
-
-    await sendEmail({
-      to: email,
-      subject: 'Verify your Pizzeria account',
-      html: emailHtml
-    });
-
-    res.status(201).json({ message: 'User registered. Please check your email to verify your account.' });
+    res.status(201).json({ message: 'User registered successfully!' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -70,8 +56,6 @@ exports.login = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'Invalid credentials' });
-
-    if (!user.isVerified) return res.status(400).json({ message: 'Please verify your email first' });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
